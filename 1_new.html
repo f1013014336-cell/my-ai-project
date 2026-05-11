@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>傅玉龙 | Image Designer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-white: #fafaf8;
+            --text-black: #1a1a1a;
+            --text-gray: #666666;
+            --text-light-gray: #999999;
+            --border-gray: #e8e8e8;
+            --accent-gray: #f0f0f0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-white);
+            color: var(--text-black);
+            line-height: 1.7;
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 0;
+        }
+
+        /* 语言切换 */
+        .lang-switch {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+        }
+
+        .lang-switch button {
+            background: transparent;
+            border: 1px solid var(--text-light-gray);
+            color: var(--text-light-gray);
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch button:hover {
+            color: var(--text-black);
+            border-color: var(--text-black);
+        }
+
+        .lang-switch button.active {
+            background-color: var(--text-black);
+            color: var(--bg-white);
+            border-color: var(--text-black);
+        }
+
+        /* Header */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 40px;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-white) 0%, var(--accent-gray) 100%);
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        header p {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: var(--text-gray);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            margin-bottom: 40px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-light-gray);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+        }
+
+        /* 装饰线 */
+        .divider {
+            width: 40px;
+            height: 1px;
+            background: var(--text-light-gray);
+            margin: 0 auto 60px;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(250, 250, 248, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-gray);
+            z-index: 100;
+            padding: 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        nav ul li {
+            border-right: 1px solid var(--border-gray);
+        }
+
+        nav ul li:last-child {
+            border-right: none;
+        }
+
+        nav a {
+            display: block;
+            padding: 18px 30px;
+            text-decoration: none;
+            color: var(--text-black);
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: var(--accent-gray);
+            color: var(--text-black);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 120px 40px;
+            border-bottom: 1px solid var(--border-gray);
+            position: relative;
+        }
+
+        section:last-child {
+            border-bottom: none;
+            padding-bottom: 160px;
+        }
+
+        section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin-bottom: 50px;
+            line-height: 1.2;
+        }
+
+        section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            letter-spacing: 0;
+            margin-top: 60px;
+            margin-bottom: 15px;
+            color: var(--text-black);
+        }
+
+        section p {
+            color: var(--text-gray);
+            max-width: 800px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        section ul {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        section ul li {
+            padding: 15px 0;
+            color: var(--text-gray);
+            padding-left: 0;
+            position: relative;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-gray);
+            padding-bottom: 15px;
+        }
+
+        section ul li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* About Section */
+        #about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            align-items: center;
+        }
+
+        .about-content {
+            max-width: 100%;
+        }
+
+        .about-visual {
+            aspect-ratio: 4/5;
+            background: linear-gradient(135deg, var(--accent-gray) 0%, var(--bg-white) 100%);
+            border: 1px solid var(--border-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .about-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Magazine Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-top: 40px;
+        }
+
+        .grid-col {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .works-video-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-top: 40px;
+            padding: 40px;
+            border: 1px solid var(--border-gray);
+            background: #ffffff;
+        }
+
+        .works-video-card iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+            background: #000;
+        }
+
+        .works-video-text {
+            display: none;
+        }
+
+        .works-video-preview {
+            width: 100%;
+        }
+
+        .works-transition {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .works-transition-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .works-video-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Contact Section */
+        #contact {
+            text-align: center;
+            padding: 200px 40px;
+        }
+
+        #contact h2 {
+            margin-bottom: 80px;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-item {
+            text-align: center;
+        }
+
+        .contact-label {
+            font-size: 0.85rem;
+            color: var(--text-light-gray);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .contact-value {
+            font-size: 1.1rem;
+            color: var(--text-black);
+            letter-spacing: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--accent-gray);
+            padding: 60px 40px;
+            text-align: center;
+            border-top: 1px solid var(--border-gray);
+            margin-top: 120px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: var(--text-light-gray);
+            letter-spacing: 0.05em;
+        }
+
+        footer p + p {
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                height: 80vh;
+                padding: 40px 20px;
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            .lang-switch {
+                top: 20px;
+                right: 20px;
+                gap: 8px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                padding: 12px 15px;
+                font-size: 0.85rem;
+            }
+
+            section {
+                padding: 80px 20px;
+            }
+
+            section h2 {
+                font-size: 2.5rem;
+                margin-bottom: 40px;
+            }
+
+            #about {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            #contact {
+                padding: 120px 20px 160px;
+            }
+        }
+
+        /* 打字机效果动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        section {
+            animation: fadeIn 0.8s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- 语言切换 -->
+    <div class="lang-switch">
+        <button id="lang-zh" class="active">中文</button>
+        <button id="lang-en">EN</button>
+        <button id="lang-ko">KO</button>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1 id="title">傅玉龙</h1>
+        <p id="subtitle">影像设计</p>
+        <p class="subtitle" id="institution">汉阳大学 | 2024</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#about" id="nav-about">关于</a></li>
+            <li><a href="#education" id="nav-education">专业</a></li>
+            <li><a href="#research" id="nav-research">研究</a></li>
+            <li><a href="#works" id="nav-works">作品</a></li>
+            <li><a href="#contact" id="nav-contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- About Section -->
+        <section id="about">
+            <div class="about-content">
+                <h2 id="about-title">关于</h2>
+                <p id="about-intro">我是傅玉龙，汉阳大学影像设计系硕士。</p>
+                <p id="about-content">致力于深入研究电影与神话的叙事融合，探索"缺陷型"传统人物的银幕表现与视觉美学，从符号学视角分析电影如何重新诠释经典叙事。</p>
+                <p id="about-focus" style="margin-top: 30px; color: var(--text-light-gray); font-size: 0.95rem;">通过电影分析、视觉设计与创意实践，探索影像艺术的边界。</p>
+            </div>
+            <div class="about-visual">
+                <img id="profile-image" src="images/profile.jpg" alt="个人照片">
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education">
+            <h2 id="edu-title">专业</h2>
+            
+            <div class="grid-2">
+                <div class="grid-col">
+                    <h3 id="master-title">硕士学位</h3>
+                    <p id="master-major">影像设计</p>
+                    <p id="master-year">汉阳大学 · 2024 - 2026</p>
+                    <div style="margin-top: 50px;">
+                        <h3 id="skills-title" style="margin-top: 0;">核心研究</h3>
+                        <ul>
+                            <li id="skill-1">电影符号学与视觉分析</li>
+                            <li id="skill-2">跨文化叙事设计</li>
+                            <li id="skill-3">神话人物的视觉演绎</li>
+                            <li id="skill-4">电影美学与观众心理</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="grid-col">
+                    <h3 id="bachelor-title">学士学位</h3>
+                    <p id="bachelor-major">影像设计</p>
+                    <p id="bachelor-year">汉阳大学 · 2019 - 2024</p>
+                    <div style="margin-top: 50px;">
+                        <h3 id="exp-title" style="margin-top: 0;">专业方向</h3>
+                        <ul>
+                            <li id="skill-5">数字影像创意</li>
+                            <li id="skill-6">电影制作与编辑</li>
+                            <li id="skill-7">视觉特效与动画</li>
+                            <li id="skill-8">艺术指导与美学设计</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Section -->
+        <section id="research">
+            <h2 id="res-title">研究</h2>
+            
+            <h3 id="pub-title">学术发表</h3>
+            <p id="pub-year">2025年6月</p>
+            
+            <p id="research-content" style="font-size: 1.05rem; line-height: 1.9; margin-top: 40px; font-weight: 400;">
+                <strong>"缺陷型"传统神话人物的电影改编策略比较研究</strong><br>
+                ——以电影〈雷神〉系列、〈哪吒〉及〈宙斯之子：赫拉克勒斯（2014）〉为例
+            </p>
+
+            <p id="research-desc" style="margin-top: 50px; color: var(--text-light-gray);">
+                本研究通过对三部典型电影的深度分析，探讨了如何通过艺术创新与视觉美学重新塑造神话形象。研究揭示了电影如何通过刻画人物的"缺陷"来释放其深层的叙事魅力，以及这一策略如何反映当代审美与文化价值。
+            </p>
+        </section>
+
+        <!-- Works Section -->
+        <section id="works">
+            <h2 id="works-title">作品</h2>
+            <div class="works-video-card">
+                <div class="works-video-preview">
+                    <iframe src="https://www.youtube.com/embed/WajNQe80Sv8" title="作品视频 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="works-video-preview">
+                    <iframe src="https://www.youtube.com/embed/h5jXP3D-Nl8" title="作品视频 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2 id="contact-title">联系</h2>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <p class="contact-label" id="phone-label">电话</p>
+                    <p class="contact-value" id="phone">01046723573</p>
+                </div>
+                <div class="contact-item">
+                    <p class="contact-label" id="email-label">邮箱</p>
+                    <p class="contact-value" id="email">f1013014336@163.com</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p id="footer">&copy; 2026 傅玉龙</p>
+        <p>影像设计 · 研究 · 创意</p>
+    </footer>
+
+    <script>
+        const translations = {
+            zh: {
+                title: "傅玉龙",
+                subtitle: "影像设计",
+                institution: "汉阳大学 | 2024",
+                navAbout: "关于",
+                navEducation: "专业",
+                navResearch: "研究",
+                navWorks: "作品",
+                navContact: "联系",
+                worksTitle: "作品",
+                aboutTitle: "关于",
+                aboutIntro: "我是傅玉龙，汉阳大学影像设计系硕士。",
+                aboutContent: "致力于深入研究电影与神话的叙事融合，探索\"缺陷型\"传统人物的银幕表现与视觉美学，从符号学视角分析电影如何重新诠释经典叙事。",
+                aboutFocus: "通过电影分析、视觉设计与创意实践，探索影像艺术的边界。",
+                eduTitle: "专业",
+                masterTitle: "硕士学位",
+                masterMajor: "影像设计",
+                masterYear: "汉阳大学 · 2024 - 2026",
+                bachelorTitle: "学士学位",
+                bachelorMajor: "影像设计",
+                bachelorYear: "汉阳大学 · 2019 - 2024",
+                skillsTitle: "核心研究",
+                skill1: "电影符号学与视觉分析",
+                skill2: "跨文化叙事设计",
+                skill3: "神话人物的视觉演绎",
+                skill4: "电影美学与观众心理",
+                expTitle: "专业方向",
+                skill5: "数字影像创意",
+                skill6: "电影制作与编辑",
+                skill7: "视觉特效与动画",
+                skill8: "艺术指导与美学设计",
+                resTitle: "研究",
+                pubTitle: "学术发表",
+                pubYear: "2025年6月",
+                researchContent: "\"缺陷型\"传统神话人物的电影改编策略比较研究——以电影〈雷神〉系列、〈哪吒〉及〈宙斯之子：赫拉克勒斯（2014）〉为例",
+                researchDesc: "本研究通过对三部典型电影的深度分析，探讨了如何通过艺术创新与视觉美学重新塑造神话形象。研究揭示了电影如何通过刻画人物的\"缺陷\"来释放其深层的叙事魅力，以及这一策略如何反映当代审美与文化价值。",
+                contactTitle: "联系",
+                phoneLabel: "电话",
+                emailLabel: "邮箱",
+                footer: "&copy; 2026 傅玉龙"
+            },
+            en: {
+                title: "FUYULONG",
+                subtitle: "Image Design",
+                institution: "Hanyang University | 2024",
+                navAbout: "About",
+                navEducation: "Major",
+                navResearch: "Research",
+                navWorks: "Works",
+                navContact: "Contact",
+                worksTitle: "Works",
+                aboutTitle: "About",
+                aboutIntro: "I am FUYULONG, a master's student in Image Design at Hanyang University.",
+                aboutContent: "Dedicated to exploring the narrative fusion of cinema and mythology, investigating how \"flawed\" traditional characters appear on screen and analyzing visual aesthetics through semiotic perspectives, examining how cinema reinterprets classic narratives.",
+                aboutFocus: "Through film analysis, visual design, and creative practice, exploring the boundaries of cinematic art.",
+                eduTitle: "Major",
+                masterTitle: "Master's Degree",
+                masterMajor: "Image Design",
+                masterYear: "Hanyang University · 2024 - 2026",
+                bachelorTitle: "Bachelor's Degree",
+                bachelorMajor: "Image Design",
+                bachelorYear: "Hanyang University · 2019 - 2024",
+                skillsTitle: "Core Research",
+                skill1: "Film Semiotics & Visual Analysis",
+                skill2: "Cross-Cultural Narrative Design",
+                skill3: "Visual Interpretation of Mythological Figures",
+                skill4: "Film Aesthetics & Audience Psychology",
+                expTitle: "Professional Focus",
+                skill5: "Digital Image Creativity",
+                skill6: "Film Production & Editing",
+                skill7: "Visual Effects & Animation",
+                skill8: "Art Direction & Aesthetic Design",
+                resTitle: "Research",
+                pubTitle: "Academic Publication",
+                pubYear: "June 2025",
+                researchContent: "A Comparative Study on the Cinematic Adaptation Strategies of \"Flawed\" Traditional Mythological Characters—Taking the Film Series Thor, Ne Zha, and Hercules: The Thracian Wars (2014) as Examples",
+                researchDesc: "Through in-depth analysis of three exemplary films, this research explores how artistic innovation and visual aesthetics reshape mythological images. The study reveals how cinema unleashes the deep narrative charm of characters through portraying their \"flaws\" and how this strategy reflects contemporary aesthetics and cultural values.",
+                contactTitle: "Contact",
+                phoneLabel: "Phone",
+                emailLabel: "Email",
+                footer: "&copy; 2026 FUYULONG"
+            },
+            ko: {
+                title: "박위롱",
+                subtitle: "영상 디자인",
+                institution: "한양대학교 | 2024",
+                navAbout: "소개",
+                navEducation: "전공",
+                navResearch: "연구",
+                navWorks: "작품",
+                navContact: "연락처",
+                worksTitle: "작품",
+                aboutTitle: "소개",
+                aboutIntro: "저는 박위롱, 한양대학교 영상디자인 석사입니다.",
+                aboutContent: "영화와 신화의 내러티브 융합을 깊이 있게 연구하며, \"결함 있는\" 전통 인물의 화면 표현과 시각 미학을 탐구하고, 기호학 관점에서 영화가 고전 서사를 어떻게 재해석하는지 분석합니다.",
+                aboutFocus: "영화 분석, 시각 디자인, 창의적 실천을 통해 영상 예술의 경계를 탐구합니다.",
+                eduTitle: "전공",
+                masterTitle: "석사학위",
+                masterMajor: "영상디자인",
+                masterYear: "한양대학교 · 2024 - 2026",
+                bachelorTitle: "학사학위",
+                bachelorMajor: "영상디자인",
+                bachelorYear: "한양대학교 · 2019 - 2024",
+                skillsTitle: "핵심 연구",
+                skill1: "영화 기호학 및 시각 분석",
+                skill2: "문화 간 서사 디자인",
+                skill3: "신화 인물의 시각적 해석",
+                skill4: "영화 미학과 관객 심리",
+                expTitle: "전문 분야",
+                skill5: "디지털 영상 창의성",
+                skill6: "영화 제작 및 편집",
+                skill7: "시각 효과 및 애니메이션",
+                skill8: "아트 디렉션 및 미학 설계",
+                resTitle: "연구",
+                pubTitle: "학술 발표",
+                pubYear: "2025년 6월",
+                researchContent: "\"결함 있는\" 전통 신화 인물의 영화 각색 전략 비교 연구—영화 시리즈 토르, 네자, 헤라클레스(2014)를 예로 들어",
+                researchDesc: "본 연구는 세 편의 대표적 영화에 대한 깊이 있는 분석을 통해 예술적 혁신과 시각 미학이 신화 이미지를 어떻게 재형성하는지 탐구합니다. 이 연구는 영화가 인물의 \"결함\"을 통해 깊층의 서사적 매력을 어떻게 드러내는지, 그리고 이러한 전략이 현대 미학과 문화 가치를 어떻게 반영하는지를 밝혀냅니다.",
+                contactTitle: "연락처",
+                phoneLabel: "전화",
+                emailLabel: "이메일",
+                footer: "&copy; 2026 박위롱"
+            }
+        };
+
+        function setLanguage(lang) {
+            document.getElementById('title').textContent = translations[lang].title;
+            document.getElementById('subtitle').textContent = translations[lang].subtitle;
+            document.getElementById('institution').textContent = translations[lang].institution;
+            document.getElementById('nav-about').textContent = translations[lang].navAbout;
+            document.getElementById('nav-education').textContent = translations[lang].navEducation;
+            document.getElementById('nav-research').textContent = translations[lang].navResearch;
+            document.getElementById('nav-works').textContent = translations[lang].navWorks;
+            document.getElementById('nav-contact').textContent = translations[lang].navContact;
+            document.getElementById('about-title').textContent = translations[lang].aboutTitle;
+            document.getElementById('about-intro').textContent = translations[lang].aboutIntro;
+            document.getElementById('about-content').textContent = translations[lang].aboutContent;
+            document.getElementById('about-focus').textContent = translations[lang].aboutFocus;
+            document.getElementById('edu-title').textContent = translations[lang].eduTitle;
+            document.getElementById('master-title').textContent = translations[lang].masterTitle;
+            document.getElementById('master-major').textContent = translations[lang].masterMajor;
+            document.getElementById('master-year').textContent = translations[lang].masterYear;
+            document.getElementById('bachelor-title').textContent = translations[lang].bachelorTitle;
+            document.getElementById('bachelor-major').textContent = translations[lang].bachelorMajor;
+            document.getElementById('bachelor-year').textContent = translations[lang].bachelorYear;
+            document.getElementById('skills-title').textContent = translations[lang].skillsTitle;
+            document.getElementById('skill-1').textContent = translations[lang].skill1;
+            document.getElementById('skill-2').textContent = translations[lang].skill2;
+            document.getElementById('skill-3').textContent = translations[lang].skill3;
+            document.getElementById('skill-4').textContent = translations[lang].skill4;
+            document.getElementById('exp-title').textContent = translations[lang].expTitle;
+            document.getElementById('skill-5').textContent = translations[lang].skill5;
+            document.getElementById('skill-6').textContent = translations[lang].skill6;
+            document.getElementById('skill-7').textContent = translations[lang].skill7;
+            document.getElementById('skill-8').textContent = translations[lang].skill8;
+            document.getElementById('res-title').textContent = translations[lang].resTitle;
+            document.getElementById('works-title').textContent = translations[lang].worksTitle;
+            document.getElementById('pub-title').textContent = translations[lang].pubTitle;
+            document.getElementById('pub-year').textContent = translations[lang].pubYear;
+            document.getElementById('research-content').innerHTML = translations[lang].researchContent.replace(/——/g, '<br>——');
+            document.getElementById('research-desc').textContent = translations[lang].researchDesc;
+            document.getElementById('contact-title').textContent = translations[lang].contactTitle;
+            document.getElementById('phone-label').textContent = translations[lang].phoneLabel;
+            document.getElementById('email-label').textContent = translations[lang].emailLabel;
+            document.getElementById('footer').textContent = translations[lang].footer;
+
+            document.querySelectorAll('.lang-switch button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('lang-' + lang).classList.add('active');
+        }
+
+        document.getElementById('nav-works').addEventListener('click', (event) => {
+            event.preventDefault();
+            const worksSection = document.getElementById('works');
+            worksSection.classList.add('works-transition');
+            requestAnimationFrame(() => {
+                worksSection.classList.add('works-transition-active');
+            });
+            worksSection.scrollIntoView({ behavior: 'smooth' });
+            worksSection.addEventListener('transitionend', function handler() {
+                worksSection.classList.remove('works-transition', 'works-transition-active');
+                worksSection.removeEventListener('transitionend', handler);
+            });
+        });
+
+        document.getElementById('lang-zh').addEventListener('click', () => setLanguage('zh'));
+        document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+        document.getElementById('lang-ko').addEventListener('click', () => setLanguage('ko'));
+    </script>
+</body>
+</html>
